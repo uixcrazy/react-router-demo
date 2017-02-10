@@ -15,4 +15,6 @@
 
 ## References
 
-[Create Apps with No Configuration](https://facebook.github.io/react/blog/2016/07/22/create-apps-with-no-configuration.html)
+- [Create Apps with No Configuration](https://facebook.github.io/react/blog/2016/07/22/create-apps-with-no-configuration.html)
+
+- Setting up environment with Webpack 2, Express.js - (remove ```react-scripts```, don't need Create Apps more )
