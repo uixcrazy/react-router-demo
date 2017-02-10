@@ -1,58 +1,123 @@
+/**
+ * docs: webpack 2.2.1
+ * https://webpack.js.org/guides/migrating/
+ * https://webpack.js.org/configuration/
+*/
 
+/* eslint no-use-before-define: 0 */ // --> OFF
 import webpack from 'webpack';
 import path from 'path';
-
-const DEV_PORT = 9009;
-const HOST_NAME = 'localhost';
+import { DEV_PORT, HOST_NAME } from './const.js';
 
 export default {
-  devtool: 'source-map',
+
   entry: {
-    demo: ['./app/src/index.js', 'webpack/hot/dev-server'],
+    'entry-list': ['./config/entry-list', 'webpack/hot/dev-server'],
   },
+
   output: {
-    path: path.join(__dirname, '../../dist'),
-    publicPath: `http://${HOST_NAME}:${DEV_PORT}/public/`,
+    path: path.resolve(__dirname, '../../dist'),
     filename: '[name].js',
+    publicPath: `http://${HOST_NAME}:${DEV_PORT}/assets/`,
   },
+
   module: {
-    loaders: [
+    rules: [
+      {
+        test: /\.js$/,
+        loader: "babel-loader",
+        options: {
+          presets: ["es2015"]
+        },
+      },
       {
         test: /\.css$/,
-        loader: 'style!css?sourceMap',
+        use: [ 'style-loader', 'css-loader' ]
       },
       {
         test: /\.scss$/,
-        // loaders: ["style", "css", "sass"] // compile to <style> tag
-        loaders: ["style", "css?sourceMap", "sass?sourceMap"],
+        use: [
+          {
+            loader: "style-loader" // creates style nodes from JS strings
+          }, {
+            loader: "css-loader", // translates CSS into CommonJS
+            options: {
+              sourceMap: true
+            }
+          }, {
+            loader: "sass-loader", // compiles Sass to CSS
+            options: {
+              sourceMap: true
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpg|svg|gif|eot|woff|ttf)$/,
-        loader: 'file-loader?name=[path][name].[ext]',
+        use: 'file-loader?name=[path][name].[ext]'
       },
-      {
-        test: /\.js$/,
-        exclude: /(node_modules|ext-lib)/,
-        loader: 'babel', // 'babel-loader' is also a valid name to reference
-        query: {
-          // presets: ['es2015']
-          plugins: ['transform-runtime'],
-        }
-      },
+
     ],
-    // noParse: [
-    //   /ext-lib[\\\/].+\.js/i,
-    // ],
+
+    /* Advanced module configuration (click to show) */
   },
+
+  resolve: {
+    // options for resolving module requests
+    // (does not apply to resolving to loaders)
+
+    // modules: [
+    //   "node_modules",
+    //   path.resolve(__dirname, "app")
+    // ],
+    // ↑↑↑ hông hiểu
+    // directories where to look for modules
+
+    extensions: [".js", ".json", ".scss", ".css"],
+    // extensions that are used
+
+    alias: {
+      "normalize": path.resolve(__dirname, "../node_modules/normalize.css"),
+    },
+  },
+
+  performance: {
+    hints: "warning", // enum
+    maxAssetSize: 200000, // int (in bytes),
+    maxEntrypointSize: 400000, // int (in bytes)
+    assetFilter: function(assetFilename) {
+      // Function predicate that provides asset filenames
+      return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+    }
+  },
+
+  devtool: "source-map",
+
+  // context: __dirname, // string (absolute path!)
+
+  target: "web", // enum
+  // the environment in which the bundle should run
+  // changes chunk loading behavior and available modules
+
+  // externals: ["react", /^@angular\//],
+  // Don't follow/bundle these modules, but request them at runtime from the environment
+
+  stats: {
+    /* TODO */
+  },
+
+  devServer: {
+    /* TODO - instead dev.js */
+  },
+
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
   ],
-  profile: true,
-  resolve: {
-    extensions: ['', '.js', '.css', '.scss'],
-    // alias: {
-    //   animate: path.join(__dirname, '../../node_modules/animate.css/source'),
-    //   normalize: path.join(__dirname, '../../node_modules/normalize.css')
-    // }
+  /* Advanced configuration (click to show) */
+  watch: true,
+  watchOptions: {
+    aggregateTimeout: 1000, // in ms
+    poll: true, // intervall in ms
   },
 };
+/* eslint no-use-before-define: 2 */  // --> ON
