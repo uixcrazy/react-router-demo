@@ -10,11 +10,18 @@ import NotFound from './components/NotFound';
 import Home from './components/Home';
 import About from './components/About';
 import Contact from './components/Contact';
+import './stylesheets/demo';
+
+// <Router history={browserHistory}>
+  // <Route path='/react-router' component={Home}/>
+  // <Route path='/react-router/about' component={About}/>
+  // <Route path='/react-router/contact' component={Contact}/>
+// </Router>
 
 ReactDOM.render((
   <Router history={browserHistory}>
-    <Route path='/react-router' component={Home}/>
-    <Route path='/react-router/about' component={About}/>
-    <Route path='/react-router/contact' component={Contact}/>
+    <Route path="/react-router" component={Home} />
+    <Route path="/react-router/contact" component={Contact}/>
+    <Route path="/react-router/about" component={About}/>
   </Router>
 ), document.getElementById('root'));
