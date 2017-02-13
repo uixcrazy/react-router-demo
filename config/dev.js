@@ -31,7 +31,8 @@ router.get('/demo', (req, res) => {
   res.send('Hello Router Express!');
 });
 
-router.get('/:anything', (req, res) => {
+// :anything
+router.get('/*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../app/index.html'), 'utf-8');
 });
 
